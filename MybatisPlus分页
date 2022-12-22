@@ -1,0 +1,76 @@
+MybatisPlus分页
+1.  在coinfig包中配置分页插件
+package com.config;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+@Configuration
+public class pageConfig {
+    //分页插件
+    @Bean
+    public MybatisPlusInterceptor interceptor(){
+        MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
+        mybatisPlusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor());
+        return mybatisPlusInterceptor;
+    }
+}
+2.在controller层写分页代码
+package com.controller;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.pojo.Person;
+import com.service.PersonService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Arrays;
+import java.util.List;
+
+@RestController/*包括Controller与ResponseBody(不会进行视图跳转)*/
+public class PersonController {
+    @Autowired
+    private PersonService personService;
+    //分页查询(当前页码数,每页显示的条数),需要配置分页插件pageConfig
+    @RequestMapping("/findPage")
+    public List<Person> findPage(){
+      int pageNum=2;
+      int pageSize=5;
+      Page page = new Page(pageNum,pageSize);
+      Page pageNow= personService.page(page);
+      //获取分页的数据
+      List<Person> list = pageNow.getRecords();
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(i);
+        }
+        return  list;
+     }
+3.在mappper层继承BaseMapper<实体类名>
+package com.mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.pojo.Person;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
+@Repository
+//此处可以把@Repository给换成@Mapper
+/* 通用CRUD封装BaseMapper接口,为Mybatis-plus启动时自动解析实体类关系映射转换为Mybatis内部对象注入容器*/
+public interface PersonMapper extends BaseMapper<Person> {
+}
+4.在application.yml中配置
+spring:
+  application:
+    name: mybatispluslx2
+  #配置数据源
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mysql6?serverTimezone=UTC
+    username: root
+    password: root
+server:
+  port: 8085
+#配置mybatisplus
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.pojo
