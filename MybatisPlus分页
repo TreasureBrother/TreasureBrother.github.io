@@ -52,10 +52,8 @@ import com.pojo.Person;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 @Repository
-//此处可以把@Repository给换成@Mapper
-/* 通用CRUD封装BaseMapper接口,为Mybatis-plus启动时自动解析实体类关系映射转换为Mybatis内部对象注入容器*/
 public interface PersonMapper extends BaseMapper<Person> {
-}
+}/* 通用CRUD封装BaseMapper接口,为Mybatis-plus启动时自动解析实体类关系映射转换为Mybatis内部对象注入容器*/
 4.在application.yml中配置
 spring:
   application:
