@@ -1,0 +1,12 @@
+ScheduledExecutorService常用方法如下:
+
+1.<V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit)
+  延迟时间单位是unit,数量是delay的时间后执行callable。
+2.ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit)
+  延迟时间单位是unit,数量是delay的时间后执行command。
+3.ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit)
+  延迟时间单位是unit,数量是initialDelay的时间后,每间隔period时间重复执行一次command。
+4.ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay TimeUnit unit)
+  创建并执行一个在给定初始延迟后首次启用的定期操作，随后，在每一次执行终止和下一次执行开始之间都存在给定
+  的延迟。
+
